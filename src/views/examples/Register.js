@@ -26,7 +26,7 @@ const Register = () => {
   const [isSubmit, setIsSubmit] = useState(false)
   const fetchCtx = useContext(FetchContext);
   const authCtx = useContext(AuthContext);
-  const {setAuthInfo} = authCtx;
+  const { setAuthInfo } = authCtx;
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -42,12 +42,16 @@ const Register = () => {
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       console.log(formValues);
-      
+
       publicFetch.post('/user', {
         ...formValues
       })
         .then(res => {
-          
+          if (res.status === 200 || res.status === 201) {
+            console.log(res?.data);
+          } else if (res.status > 400) {
+
+          }
         })
         .catch((err) => console.log(err));
     }

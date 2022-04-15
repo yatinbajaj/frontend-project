@@ -18,6 +18,7 @@ import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
 import FetchContext from "context/FetchContext";
 import AuthContext from "context/AuthContext";
 import { publicFetch } from "util/publicFetch";
+import { useHistory } from 'react-router-dom'
 
 const Login = () => {
   const initialValue = { email: "", password: "" };
@@ -25,10 +26,11 @@ const Login = () => {
   const [formErrors, setFormErrors] = useState({})
   const [isSubmit, setIsSubmit] = useState(false);
 
-  const ctx = useContext(FetchContext);
-  const authAxios = ctx.authAxios;
+  // const ctx = useContext(FetchContext);
   const authCtx = useContext(AuthContext);
   const { setAuthInfo } = authCtx;
+  const history = useHistory();
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormValues({ ...formValues, [name]: value })
@@ -46,14 +48,20 @@ const Login = () => {
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       console.log(formValues)
-    }
-    publicFetch.post('/login', {
-      ...formValues
-    })
-      .then(res => {
-
+      publicFetch.post('/login', {
+        ...formValues
       })
-      .catch((err) => console.log(err));
+        .then(res => {
+          if (res.status === 200 || res.status === 201) {
+            console.log(res?.data);
+            setAuthInfo({ ...res?.data })
+            history.push('/admin/index');
+          } else if (res.status > 400) {
+            
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   })
 
   const validate = (values) => {
@@ -71,6 +79,7 @@ const Login = () => {
 
     return errors
   }
+
   return (
     <>
       <Col lg="5" md="7">

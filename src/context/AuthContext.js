@@ -2,7 +2,7 @@ import React, { createContext, useState } from 'react';
 import { useHistory } from 'react-router-dom'
 
 const AuthContext = createContext({
-    authState: { token:"",expiresAt:0,userInfo:""},
+    authState: {},
     logout: () => { },
     setAuthInfo: ({token,expiresAt,userInfo}) => { },
     isAuthenticated:()=>{}
@@ -16,16 +16,17 @@ const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     const expiresAt = localStorage.getItem('expiresAt');
     const userInfo = localStorage.getItem('userInfo');
-
+    console.log(JSON.parse(userInfo));
     const [authState, setAuthState] = useState({
         token,
         expiresAt,
-        userInfo: userInfo ? JSON.parse(userInfo) : {}
+        userInfo: userInfo
     });
 
-    const setAuthInfo = ({token,expiresAt,userInfo}) => {
+    const setAuthInfo = ({ token, expiresAt, userInfo }) => {
+        console.log(userInfo)
         localStorage.setItem('token', token);
-        localStorage.setItem('userInfo', userInfo);
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
         localStorage.setItem('expiresAt', expiresAt);
 
         setAuthState({

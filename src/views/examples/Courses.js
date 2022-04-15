@@ -22,6 +22,7 @@ const Courses = () => {
     const [formValues, setFormValues] = useState(initialValue)
     const [formErrors, setFormErrors] = useState({})
     const [isSubmit, setIsSubmit] = useState(false)
+    const [departments, setDepartments] = useState();
     const ctx = useContext(FetchContext);
     const authAxios = ctx.authAxios;
     const handleChange = (e) => {
@@ -43,10 +44,26 @@ const Courses = () => {
             ...formValues
           })
             .then(res => {
-    
+                if (res.status === 200 || res.status === 201) {
+                    console.log(res?.data);
+                } else if (res.status > 400) {
+                    
+                }
             })
             .catch((err) => console.log(err));
     })
+
+    useEffect(() => {
+        authAxios.get('/admin/department')
+            .then(res => {
+                if (res.status === 200 || res.status === 201) {
+                    console.log(res?.data);
+                } else if (res.status > 400) {
+                    
+                }
+            })
+            .catch((err) => console.log(err));
+    }, []);
 
     const validate = (values) => {
         const errors = {}

@@ -44,7 +44,11 @@ const QuestionBank = () => {
             ...formValues
           })
             .then(res => {
-    
+                if (res.status === 200 || res.status === 201) {
+                    console.log(res?.data);
+                } else if (res.status > 400) {
+                    
+                }
             })
             .catch((err) => console.log(err));
     })

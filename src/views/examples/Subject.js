@@ -12,13 +12,13 @@ import {
     Row,
     Col,
 } from "reactstrap";
-import { useState, useEffect,useContext } from "react"
+import { useState, useEffect, useContext } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBook } from '@fortawesome/free-solid-svg-icons'
 import FetchContext from "context/FetchContext";
 
 const Subject = () => {
-    const initialValue = { subjectCode: "", subjectName: "", deptId: "", courseId : "" };
+    const initialValue = { subjectCode: "", subjectName: "", deptId: "", courseId: "" };
     const [formValues, setFormValues] = useState(initialValue)
     const [formErrors, setFormErrors] = useState({})
     const [isSubmit, setIsSubmit] = useState(false)
@@ -28,7 +28,7 @@ const Subject = () => {
     }
     const ctx = useContext(FetchContext);
     const authAxios = ctx.authAxios;
-    
+
     const handleSubmit = (e) => {
         e.preventDefault()
         setFormErrors(validate(formValues))
@@ -41,9 +41,13 @@ const Subject = () => {
         }
         authAxios.post('/admin/subject', {
             ...formValues
-          })
+        })
             .then(res => {
-    
+                if (res.status === 200 || res.status === 201) {
+                    console.log(res?.data);
+                } else if (res.status > 400) {
+
+                }
             })
             .catch((err) => console.log(err));
     })
@@ -58,11 +62,11 @@ const Subject = () => {
             errors.subjectName = "Subject name is required"
         }
 
-        if(!values.deptId) {
+        if (!values.deptId) {
             errors.deptId = "Department is required"
         }
 
-        if(!values.courseId) {
+        if (!values.courseId) {
             errors.courseId = "Course is required"
         }
 
