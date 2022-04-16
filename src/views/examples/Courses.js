@@ -12,7 +12,7 @@ import {
     Row,
     Col,
 } from "reactstrap";
-import { useState, useEffect,useContext } from "react"
+import { useState, useEffect, useContext } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBook } from '@fortawesome/free-solid-svg-icons'
 import FetchContext from "context/FetchContext";
@@ -22,7 +22,7 @@ const Courses = () => {
     const [formValues, setFormValues] = useState(initialValue)
     const [formErrors, setFormErrors] = useState({})
     const [isSubmit, setIsSubmit] = useState(false)
-    const [departments, setDepartments] = useState();
+    const [departments, setDepartments] = useState([]);
     const ctx = useContext(FetchContext);
     const authAxios = ctx.authAxios;
     const handleChange = (e) => {
@@ -37,33 +37,35 @@ const Courses = () => {
     }
 
     useEffect(() => {
-        if (Object.keys(formErrors).length === 0 && isSubmit) {
-            console.log(formValues)
-        }
-        authAxios.post('/admin/course', {
-            ...formValues
-          })
-            .then(res => {
-                if (res.status === 200 || res.status === 201) {
-                    console.log(res?.data);
-                } else if (res.status > 400) {
-                    
-                }
-            })
-            .catch((err) => console.log(err));
-    })
-
-    useEffect(() => {
         authAxios.get('/admin/department')
             .then(res => {
                 if (res.status === 200 || res.status === 201) {
                     console.log(res?.data);
+                    setDepartments(res.data.departments);
                 } else if (res.status > 400) {
-                    
+
                 }
             })
             .catch((err) => console.log(err));
     }, []);
+
+    useEffect(() => {
+        if (Object.keys(formErrors).length === 0 && isSubmit) {
+            console.log(formValues)
+            // authAxios.post('/admin/course', {
+            //     ...formValues
+            // })
+            //     .then(res => {
+            //         if (res.status === 200 || res.status === 201) {
+            //             console.log(res?.data);
+            //         } else if (res.status > 400) {
+
+            //         }
+            //     })
+            //     .catch((err) => console.log(err));
+        }
+    })
+
 
     const validate = (values) => {
         const errors = {}
@@ -75,7 +77,7 @@ const Courses = () => {
             errors.courseName = "Course name is required"
         }
 
-        if(!values.deptId) {
+        if (!values.deptId) {
             errors.deptId = "Department is required"
         }
 
@@ -129,12 +131,18 @@ const Courses = () => {
 
                             <FormGroup>
                                 <Input type="select" name="deptId" onChange={handleChange} value={formValues.deptId}>
+                                    
                                     <option value="">Select department</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
+                                    {console.log(departments.length > 0)}
+                                    {departments.length > 0
+                                        &&
+                                        departments.map(department => {
+                                            return (
+                                                <option value={department._id} key={department._id}>{department.deptFullName}</option>
+                                            )
+                                        })
+                                    }
+
                                 </Input>
                                 <small className="text-danger">{formErrors.deptId}</small>
                             </FormGroup>

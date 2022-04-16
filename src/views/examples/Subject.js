@@ -22,6 +22,9 @@ const Subject = () => {
     const [formValues, setFormValues] = useState(initialValue)
     const [formErrors, setFormErrors] = useState({})
     const [isSubmit, setIsSubmit] = useState(false)
+    const [departments, setDepartments] = useState([]);
+    const [courses, setCourses] = useState([]);
+
     const handleChange = (e) => {
         const { name, value } = e.target
         setFormValues({ ...formValues, [name]: value })
@@ -36,20 +39,46 @@ const Subject = () => {
     }
 
     useEffect(() => {
-        if (Object.keys(formErrors).length === 0 && isSubmit) {
-            console.log(formValues)
-        }
-        authAxios.post('/admin/subject', {
-            ...formValues
-        })
+        authAxios.get('/admin/department')
             .then(res => {
                 if (res.status === 200 || res.status === 201) {
                     console.log(res?.data);
+                    setDepartments(res?.data?.departments);
                 } else if (res.status > 400) {
 
                 }
             })
             .catch((err) => console.log(err));
+    }, []);
+
+    useEffect(() => {
+        authAxios.get('/admin/course')
+            .then(res => {
+                if (res.status === 200 || res.status === 201) {
+                    console.log(res?.data);
+                    setCourses(res?.data?.courses);
+                } else if (res.status > 400) {
+
+                }
+            })
+            .catch((err) => console.log(err));
+    }, []);
+
+    useEffect(() => {
+        if (Object.keys(formErrors).length === 0 && isSubmit) {
+            console.log(formValues)
+            // authAxios.post('/admin/subject', {
+            //     ...formValues
+            // })
+            //     .then(res => {
+            //         if (res.status === 200 || res.status === 201) {
+            //             console.log(res?.data);
+            //         } else if (res.status > 400) {
+    
+            //         }
+            //     })
+            //     .catch((err) => console.log(err));
+        }
     })
 
     const validate = (values) => {
@@ -120,23 +149,31 @@ const Subject = () => {
 
                             <FormGroup>
                                 <Input type="select" name="courseId" onChange={handleChange} value={formValues.courseId}>
-                                    <option value="">Select Course</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
+                                <option value="">Select Course</option>
+                                {console.log(courses.length > 0)}
+                                {courses.length > 0
+                                    &&
+                                    courses.map(course => {
+                                        return (
+                                            <option value={course._id} key={course._id}>{course.courseName}</option>
+                                        )
+                                    })
+                                }
                                 </Input>
                                 <small className="text-danger">{formErrors.courseId}</small>
                             </FormGroup>
                             <FormGroup>
                                 <Input type="select" name="deptId" onChange={handleChange} value={formValues.deptId}>
-                                    <option value="">Select department</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
+                                <option value="">Select department</option>
+                                {console.log(departments.length > 0)}
+                                {departments.length > 0
+                                    &&
+                                    departments.map(department => {
+                                        return (
+                                            <option value={department._id} key={department._id}>{department.deptFullName}</option>
+                                        )
+                                    })
+                                }
                                 </Input>
                                 <small className="text-danger">{formErrors.deptId}</small>
                             </FormGroup>

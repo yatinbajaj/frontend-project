@@ -22,6 +22,8 @@ const Courses = () => {
     const [formValues, setFormValues] = useState(initialValue)
     const [formErrors, setFormErrors] = useState({})
     const [isSubmit, setIsSubmit] = useState(false)
+    const [subjects, setSubjects] = useState([]);
+
     const handleChange = (e) => {
         const { name, value } = e.target
         setFormValues({ ...formValues, [name]: value })
@@ -35,22 +37,36 @@ const Courses = () => {
         setFormErrors(validate(formValues))
         setIsSubmit(true)
     }
+
+    
+    useEffect(() => {
+        authAxios.get('/admin/subject')
+            .then(res => {
+                if (res.status === 200 || res.status === 201) {
+                    console.log(res?.data);
+                    setSubjects(res?.data?.subjects);
+                } else if (res.status > 400) {
+
+                }
+            })
+            .catch((err) => console.log(err));
+    }, []);
     
     useEffect(() => {
         if (Object.keys(formErrors).length === 0 && isSubmit) {
             console.log(formValues)
+            // authAxios.post('/unit', {
+            //     ...formValues
+            //   })
+            //     .then(res => {
+            //         if (res.status === 200 || res.status === 201) {
+            //             console.log(res?.data);
+            //         } else if (res.status > 400) {
+                        
+            //         }
+            //     })
+            //     .catch((err) => console.log(err));
         }
-        authAxios.post('/unit', {
-            ...formValues
-          })
-            .then(res => {
-                if (res.status === 200 || res.status === 201) {
-                    console.log(res?.data);
-                } else if (res.status > 400) {
-                    
-                }
-            })
-            .catch((err) => console.log(err));
     })
 
     const validate = (values) => {
@@ -117,12 +133,16 @@ const Courses = () => {
 
                             <FormGroup>
                                 <Input type="select" name="subjectId" onChange={handleChange} value={formValues.subjectId}>
-                                    <option value="">Select Subject</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
+                                <option value="">Select department</option>
+                                {console.log(subjects.length > 0)}
+                                {subjects.length > 0
+                                    &&
+                                    subjects.map(subject => {
+                                        return (
+                                            <option value={subject._id} key={subject._id}>{subject.subjectName}</option>
+                                        )
+                                    })
+                                }
                                 </Input>
                                 <small className="text-danger">{formErrors.subjectId}</small>
                             </FormGroup>
