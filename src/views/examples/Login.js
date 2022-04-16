@@ -15,7 +15,6 @@ import {
 import { useState, useEffect, useContext } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
-import FetchContext from "context/FetchContext";
 import AuthContext from "context/AuthContext";
 import { publicFetch } from "util/publicFetch";
 import { useHistory } from 'react-router-dom'
