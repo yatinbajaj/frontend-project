@@ -29,7 +29,7 @@ const Profile = () => {
             if (res.status === 200 || res.status === 201) {
                 setUser(res?.data);
             } else if (res.status > 400) {
-
+              
             }
         })
         .catch((err) => console.log(err));

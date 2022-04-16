@@ -16,6 +16,7 @@ import { useState, useEffect, useContext } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBook } from '@fortawesome/free-solid-svg-icons'
 import FetchContext from "context/FetchContext";
+import { useHistory } from 'react-router-dom'
 
 const Courses = () => {
     const initialValue = { courseCode: "", courseName: "", deptId: "" };
@@ -25,6 +26,8 @@ const Courses = () => {
     const [departments, setDepartments] = useState([]);
     const ctx = useContext(FetchContext);
     const authAxios = ctx.authAxios;
+    const history = useHistory();
+
     const handleChange = (e) => {
         const { name, value } = e.target
         setFormValues({ ...formValues, [name]: value })
@@ -40,9 +43,9 @@ const Courses = () => {
         authAxios.get('/admin/department')
             .then(res => {
                 if (res.status === 200 || res.status === 201) {
-                    console.log(res?.data);
                     setDepartments(res.data.departments);
                 } else if (res.status > 400) {
+                    history.push('/auth/index')
 
                 }
             })
@@ -52,19 +55,21 @@ const Courses = () => {
     useEffect(() => {
         if (Object.keys(formErrors).length === 0 && isSubmit) {
             console.log(formValues)
-            // authAxios.post('/admin/course', {
-            //     ...formValues
-            // })
-            //     .then(res => {
-            //         if (res.status === 200 || res.status === 201) {
-            //             console.log(res?.data);
-            //         } else if (res.status > 400) {
+            authAxios.post('/admin/course', {
+                ...formValues
+            })
+                .then(res => {
+                    if (res.status === 200 || res.status === 201) {
+                        console.log(res?.data);
+                        history.push('/admin/index')
+                    } else if (res.status > 400) {
+                        history.push('/auth/index')
 
-            //         }
-            //     })
-            //     .catch((err) => console.log(err));
+                    }
+                })
+                .catch((err) => console.log(err));
         }
-    })
+    },[formErrors,isSubmit])
 
 
     const validate = (values) => {

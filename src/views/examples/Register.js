@@ -27,7 +27,7 @@ const Register = () => {
   const fetchCtx = useContext(FetchContext);
   const authCtx = useContext(AuthContext);
   const { setAuthInfo } = authCtx;
-
+  const {authAxios} = fetchCtx
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormValues({ ...formValues, [name]: value })
@@ -43,7 +43,7 @@ const Register = () => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       console.log(formValues);
 
-      publicFetch.post('/user', {
+      authAxios.post('/admin/user', {
         ...formValues
       })
         .then(res => {
@@ -55,7 +55,7 @@ const Register = () => {
         })
         .catch((err) => console.log(err));
     }
-  })
+  },[formErrors,isSubmit])
 
   const validate = (values) => {
     const errors = {}

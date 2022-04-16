@@ -12,19 +12,24 @@ import {
     Row,
     Col,
 } from "reactstrap";
-import { useState, useEffect,useContext } from "react"
+import { useState, useEffect, useContext } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBook } from '@fortawesome/free-solid-svg-icons'
 import FetchContext from "context/FetchContext";
+import { useHistory } from 'react-router-dom'
 
 const QuestionBank = () => {
     const initialValue = { question: "", unitId: "", marks: "", subjectId: "" };
     const [formValues, setFormValues] = useState(initialValue)
     const [formErrors, setFormErrors] = useState({})
     const [isSubmit, setIsSubmit] = useState(false)
+    const [subjects, setSubjects] = useState([]);
+    const [units, setUnits] = useState([]);
+
     const ctx = useContext(FetchContext);
     const authAxios = ctx.authAxios;
-    
+    const history = useHistory();
+
     const handleChange = (e) => {
         const { name, value } = e.target
         setFormValues({ ...formValues, [name]: value })
@@ -37,21 +42,49 @@ const QuestionBank = () => {
     }
 
     useEffect(() => {
-        if (Object.keys(formErrors).length === 0 && isSubmit) {
-            console.log(formValues)
-        }
-        authAxios.post('/question', {
-            ...formValues
-          })
+        authAxios.get('/admin/subject')
             .then(res => {
                 if (res.status === 200 || res.status === 201) {
                     console.log(res?.data);
+                    setSubjects(res?.data?.subjects);
                 } else if (res.status > 400) {
-                    
+
                 }
             })
             .catch((err) => console.log(err));
-    })
+    }, []);
+
+    
+    useEffect(() => {
+        authAxios.get('/unit')
+            .then(res => {
+                if (res.status === 200 || res.status === 201) {
+                    console.log(res?.data);
+                    setUnits(res?.data?.units);
+                } else if (res.status > 400) {
+
+                }
+            })
+            .catch((err) => console.log(err));
+    }, []);
+
+    useEffect(() => {
+        if (Object.keys(formErrors).length === 0 && isSubmit) {
+            console.log(formValues)
+            authAxios.post('/question', {
+                ...formValues
+            })
+                .then(res => {
+                    if (res.status === 200 || res.status === 201) {
+                        console.log(res?.data);
+                        history.push('/admin/index')
+                    } else if (res.status > 400) {
+
+                    }
+                })
+                .catch((err) => console.log(err));
+        }
+    },[formErrors,isSubmit])
 
     const validate = (values) => {
         const errors = {}
@@ -63,11 +96,11 @@ const QuestionBank = () => {
             errors.unitId = "Unit id is required"
         }
 
-        if(!values.marks) {
+        if (!values.marks) {
             errors.marks = "Mark is required"
         }
 
-        if(!values.subjectId) {
+        if (!values.subjectId) {
             errors.subjectId = "Subject id is required"
         }
         return errors
@@ -102,11 +135,15 @@ const QuestionBank = () => {
                             <FormGroup>
                                 <Input type="select" name="unitId" onChange={handleChange} value={formValues.unitId}>
                                     <option value="">Select Unit</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
+                                    {console.log(units.length > 0)}
+                                    {units.length > 0
+                                        &&
+                                        units.map(unit => {
+                                            return (
+                                                <option value={unit._id} key={unit._id}>{unit.unitName}</option>
+                                            )
+                                        })
+                                    }
                                 </Input>
                                 <small className="text-danger">{formErrors.unitId}</small>
                             </FormGroup>
@@ -133,11 +170,15 @@ const QuestionBank = () => {
                             <FormGroup>
                                 <Input type="select" name="subjectId" onChange={handleChange} value={formValues.subjectId}>
                                     <option value="">Select Subject</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
+                                    {console.log(subjects.length > 0)}
+                                    {subjects.length > 0
+                                        &&
+                                        subjects.map(subject => {
+                                            return (
+                                                <option value={subject._id} key={subject._id}>{subject.subjectName}</option>
+                                            )
+                                        })
+                                    }
                                 </Input>
                                 <small className="text-danger">{formErrors.subjectId}</small>
                             </FormGroup>

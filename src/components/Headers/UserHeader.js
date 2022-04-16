@@ -1,5 +1,5 @@
 
-import { Button, Container, Row, Col } from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 
 const UserHeader = ({userName}) => {
   return (

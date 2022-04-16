@@ -105,12 +105,9 @@ Argon Dashboard React
     └── views
         ├── Index.jsx
         └── examples
-            ├── Icons.jsx
             ├── Login.jsx
-            ├── Maps.jsx
             ├── Profile.jsx
             ├── Register.jsx
-            └── Tables.jsx
 ```
 
 ## Browser Support

@@ -16,6 +16,7 @@ import { useState, useEffect,useContext } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBook } from '@fortawesome/free-solid-svg-icons'
 import FetchContext from "context/FetchContext";
+import { useHistory } from 'react-router-dom'
 
 const Courses = () => {
     const initialValue = { unitCode: "", unitName: "", subjectId: "" };
@@ -31,6 +32,7 @@ const Courses = () => {
 
     const ctx = useContext(FetchContext);
     const authAxios = ctx.authAxios;
+    const history = useHistory();
     
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -55,19 +57,20 @@ const Courses = () => {
     useEffect(() => {
         if (Object.keys(formErrors).length === 0 && isSubmit) {
             console.log(formValues)
-            // authAxios.post('/unit', {
-            //     ...formValues
-            //   })
-            //     .then(res => {
-            //         if (res.status === 200 || res.status === 201) {
-            //             console.log(res?.data);
-            //         } else if (res.status > 400) {
+            authAxios.post('/unit', {
+                ...formValues
+              })
+                .then(res => {
+                    if (res.status === 200 || res.status === 201) {
+                        console.log(res?.data);
+                        history.push('/admin/index');
+                    } else if (res.status > 400) {
                         
-            //         }
-            //     })
-            //     .catch((err) => console.log(err));
+                    }
+                })
+                .catch((err) => console.log(err));
         }
-    })
+    },[formErrors,isSubmit])
 
     const validate = (values) => {
         const errors = {}
@@ -133,7 +136,7 @@ const Courses = () => {
 
                             <FormGroup>
                                 <Input type="select" name="subjectId" onChange={handleChange} value={formValues.subjectId}>
-                                <option value="">Select department</option>
+                                <option value="">Select Subject</option>
                                 {console.log(subjects.length > 0)}
                                 {subjects.length > 0
                                     &&
