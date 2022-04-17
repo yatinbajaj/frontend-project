@@ -8,6 +8,11 @@ import Course from "views/examples/Courses.js";
 import Subject from "views/examples/Subject.js";
 import Unit from "views/examples/Unit.js";
 import QuestionBank from "views/examples/QuestionBank.js"
+import DepartmentTable from "views/examples/DepartmentTable.js"
+import CourseTable from "views/examples/CourseTable";
+import SubjectTable from "views/examples/SubjectTable";
+import UnitTable from "views/examples/UnitTable"
+import QuestionTable from "views/examples/QuestionTable"
 var routes = [
   {
     path: "/index",
@@ -15,6 +20,41 @@ var routes = [
     icon: "ni ni-tv-2 text-primary",
     component: Index,
     layout: "/admin",
+  },
+  {
+    path: "/department-table",
+    name: "Department Table",
+    icon: "ni ni-building",
+    component: DepartmentTable,
+    layout: "/admin"
+  },
+  {
+    path: "/courses-table",
+    name: "Courses Table",
+    icon: "ni ni-books",
+    component: CourseTable,
+    layout: "/admin"
+  },
+  {
+    path: "/subject-table",
+    name: "Subject Table",
+    icon: "ni ni-book-bookmark",
+    component: SubjectTable,
+    layout: "/admin"
+  },
+  {
+    path: "/units-table",
+    name: "Unit Table",
+    icon: "ni ni-book-bookmark",
+    component: UnitTable,
+    layout: "/admin"
+  },
+  {
+    path: "/questions-table",
+    name: "Questions Table",
+    icon: "ni ni-book-bookmark",
+    component: QuestionTable,
+    layout: "/admin"
   },
   {
     path: "/user-profile",
@@ -48,21 +88,21 @@ var routes = [
   {
     path: "/course",
     name: "Course",
-    icon: "",
+    icon: "ni ni-books",
     component: Course,
     layout: "/auth"
   },
   {
     path: "/subject",
     name: "Subject",
-    icon: "",
+    icon: "ni ni-book-bookmark",
     component: Subject,
     layout: "/auth"
   },
   {
     path: "/unit",
     name: "Unit",
-    icon: "",
+    icon: "ni ni-single-copy-04",
     component: Unit,
     layout: "/auth"
   },
