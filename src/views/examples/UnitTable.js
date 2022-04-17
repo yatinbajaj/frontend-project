@@ -1,25 +1,34 @@
 import React from 'react'
 import {
-  Badge,
   Card,
   CardHeader,
-  CardFooter,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  Media,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-  Progress,
   Table,
   Container,
   Row,
-  UncontrolledTooltip,
 } from "reactstrap";
 import Header from 'components/Headers/Header';
+import { useState, useEffect, useContext } from "react"
+import FetchContext from "context/FetchContext";
+import { useHistory } from 'react-router-dom'
+
 const CourseTable = () => {
+  const [units, setUnits] = useState([]);
+  const ctx = useContext(FetchContext);
+  const authAxios = ctx.authAxios;
+  const history = useHistory();
+
+  useEffect(() => {
+    authAxios.get('/unit')
+      .then(res => {
+        if (res.status === 200 || res.status === 201) {
+          setUnits(res?.data?.units);
+        } else if (res.status > 400) {
+
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <>
       <Header />
@@ -41,18 +50,18 @@ const CourseTable = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td scope="row">
-                     UI101
-                    </td>
-                    <td>Python</td>
-                    <td>
-                      1
-                    </td>
-                    <td>
-                      subject id here
-                    </td>
-                  </tr>
+                  
+                  {units.length > 0 && units.map((unit) => {
+                    return (
+                      <>
+                        <tr>
+                          <td scope='row'>{unit.unitCode}</td>
+                          <td scope='row'>{unit.unitName}</td>
+                          <td scope='row'>{unit.subjectId}</td>
+                        </tr>
+                      </>
+                    )
+                  })}
                 </tbody>
               </Table>
             </Card>

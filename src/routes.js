@@ -87,28 +87,28 @@ var routes = [
 
   {
     path: "/course",
-    name: "Course",
+    name: "Add Course",
     icon: "ni ni-books",
     component: Course,
     layout: "/auth"
   },
   {
     path: "/subject",
-    name: "Subject",
+    name: "Add Subject",
     icon: "ni ni-book-bookmark",
     component: Subject,
     layout: "/auth"
   },
   {
     path: "/unit",
-    name: "Unit",
+    name: "Add Unit",
     icon: "ni ni-single-copy-04",
     component: Unit,
     layout: "/auth"
   },
   {
     path: "/questionbank",
-    name: "Question",
+    name: "Add Question",
     icon: "",
     component: QuestionBank,
     layout: "/auth"

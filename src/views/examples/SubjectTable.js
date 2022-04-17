@@ -1,25 +1,36 @@
 import React from 'react'
 import {
-  Badge,
   Card,
   CardHeader,
-  CardFooter,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  Media,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-  Progress,
   Table,
   Container,
   Row,
-  UncontrolledTooltip,
 } from "reactstrap";
 import Header from 'components/Headers/Header';
+import { useState, useEffect, useContext } from "react"
+import FetchContext from "context/FetchContext";
+import { useHistory } from 'react-router-dom'
+
 const CourseTable = () => {
+  const [subjects, setSubjects] = useState([]);
+  const ctx = useContext(FetchContext);
+  const authAxios = ctx.authAxios;
+  const history = useHistory();
+  
+    
+  useEffect(() => {
+    authAxios.get('/admin/subject')
+      .then(res => {
+        if (res.status === 200 || res.status === 201) {
+          console.log(res?.data);
+          setSubjects(res?.data?.subjects);
+        } else if (res.status > 400) {
+
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
+  
   return (
     <>
       <Header />
@@ -42,18 +53,18 @@ const CourseTable = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td scope="row">
-                     dsjfl
-                    </td>
-                    <td>Python</td>
-                    <td>
-                      1
-                    </td>
-                    <td>
-                      1
-                    </td>
-                  </tr>
+                {subjects.length > 0 && subjects.map((subject) => {
+                  return (
+                    <>
+                      <tr>
+                        <td scope='row'>{subject.subjectCode}</td>
+                        <td scope='row'>{subject.subjectName}</td>
+                        <td scope='row'>{subject.courseId}</td>
+                        <td scope='row'>{subject.deptId}</td>
+                      </tr>
+                    </>
+                  )
+                })}
                 </tbody>
               </Table>
             </Card>

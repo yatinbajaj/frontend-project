@@ -1,25 +1,49 @@
 import React from 'react'
 import {
-  Badge,
   Card,
   CardHeader,
-  CardFooter,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  Media,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-  Progress,
   Table,
   Container,
   Row,
-  UncontrolledTooltip,
 } from "reactstrap";
 import Header from 'components/Headers/Header';
+import { useState, useEffect, useContext } from "react"
+import FetchContext from "context/FetchContext";
+import { useHistory } from 'react-router-dom'
+
 const CourseTable = () => {
+  const [courses, setCourses] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const ctx = useContext(FetchContext);
+  const authAxios = ctx.authAxios;
+  const history = useHistory();
+
+  useEffect(() => {
+    authAxios.get('/admin/department')
+        .then(res => {
+            if (res.status === 200 || res.status === 201) {
+                console.log(res?.data);
+                setDepartments(res?.data?.departments);
+            } else if (res.status > 400) {
+
+            }
+        })
+        .catch((err) => console.log(err));
+  }, []);
+  
+  useEffect(() => {
+    authAxios.get('/admin/course')
+      .then(res => {
+        if (res.status === 200 || res.status === 201) {
+          console.log(res?.data);
+          setCourses(res?.data?.courses);
+        } else if (res.status > 400) {
+
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <>
       <Header />
@@ -39,17 +63,20 @@ const CourseTable = () => {
                     <th scope="col">Department Id</th>
                     <th scope="col" />
                   </tr>
+
                 </thead>
                 <tbody>
-                  <tr>
-                    <td scope="row">
-                     PY123
-                    </td>
-                    <td>Python</td>
-                    <td>
-                      1
-                    </td>
-                  </tr>
+                  {courses.length > 0 && courses.map((course) => {
+                    return (
+                      <>
+                        <tr>
+                          <td scope='row'>{course.courseCode}</td>
+                          <td scope='row'>{course.courseName}</td>
+                          <td scope='row'>{course.deptId}</td>
+                        </tr>
+                      </>
+                    )
+                  })}
                 </tbody>
               </Table>
             </Card>

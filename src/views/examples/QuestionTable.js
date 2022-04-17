@@ -1,25 +1,34 @@
 import React from 'react'
 import {
-  Badge,
   Card,
   CardHeader,
-  CardFooter,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  Media,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-  Progress,
   Table,
   Container,
   Row,
-  UncontrolledTooltip,
 } from "reactstrap";
 import Header from 'components/Headers/Header';
+import { useState, useEffect, useContext } from "react"
+import FetchContext from "context/FetchContext";
+import { useHistory } from 'react-router-dom'
+
 const CourseTable = () => {
+  const [questions, setQuestions] = useState([]);
+  const ctx = useContext(FetchContext);
+  const authAxios = ctx.authAxios;
+  const history = useHistory();
+
+  useEffect(() => {
+    authAxios.get('/question')
+      .then(res => {
+        if (res.status === 200 || res.status === 201) {
+          setQuestions(res?.data?.questions);
+        } else if (res.status > 400) {
+
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <>
       <Header />
@@ -35,24 +44,25 @@ const CourseTable = () => {
                 <thead className="thead-dark">
                   <tr>
                     <th scope="col">Question</th>
-                    <th scope="col">Unit Id</th>
                     <th scope="col">Marks</th>
+                    <th scope="col">Unit Id</th>
                     <th scope="col">Subject Id</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td scope="row">
-                     dsjfl
-                    </td>
-                    <td>Python</td>
-                    <td>
-                      1
-                    </td>
-                    <td>
-                      1
-                    </td>
-                  </tr>
+                  {questions.length > 0 && questions.map((question) => {
+                    return (
+                      <>
+                        <tr>
+                          <td scope='row'>{question.question}</td>
+                          <td scope='row'>{question.marks}</td>
+                          <td scope='row'>{question.unitId}</td>
+                          <td scope='row'>{question.subjectId}</td>
+                        </tr>
+                      </>
+                    )
+                  })}
+
                 </tbody>
               </Table>
             </Card>

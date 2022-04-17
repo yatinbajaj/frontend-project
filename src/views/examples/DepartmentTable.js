@@ -1,25 +1,35 @@
 import React from 'react'
 import {
-  Badge,
   Card,
   CardHeader,
-  CardFooter,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  Media,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-  Progress,
   Table,
   Container,
   Row,
-  UncontrolledTooltip,
 } from "reactstrap";
 import Header from 'components/Headers/Header';
+import { useState, useEffect, useContext } from "react"
+import FetchContext from "context/FetchContext";
+import { useHistory } from 'react-router-dom'
+
 const DepartmentTable = () => {
+  const [departments, setDepartments] = useState([]);
+  const ctx = useContext(FetchContext);
+  const authAxios = ctx.authAxios;
+  const history = useHistory();
+
+  useEffect(() => {
+    authAxios.get('/admin/department')
+        .then(res => {
+            if (res.status === 200 || res.status === 201) {
+                console.log(res?.data);
+                setDepartments(res?.data?.departments);
+            } else if (res.status > 400) {
+
+            }
+        })
+        .catch((err) => console.log(err));
+  }, []);
+
   return (
     <>
       <Header />
@@ -41,15 +51,17 @@ const DepartmentTable = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td scope="row">
-                     CA101
-                    </td>
-                    <td>Computer Application</td>
-                    <td>
-                      CA
-                    </td>
-                  </tr>
+                  {departments.length > 0 && departments.map((department) => {
+                  return (
+                    <>
+                      <tr>
+                        <td scope='row'>{department.deptCode}</td>
+                        <td scope='row'>{department.deptShortName}</td>
+                        <td scope='row'>{department.deptFullName}</td>
+                      </tr>
+                    </>
+                  )
+                  })}
                 </tbody>
               </Table>
             </Card>
