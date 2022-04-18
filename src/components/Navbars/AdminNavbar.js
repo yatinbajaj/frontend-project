@@ -30,14 +30,14 @@ const AdminNavbar = (props) => {
                     <img
                       alt="..."
                       src={
-                        require("../../assets/img/theme/team-4-800x800.jpg")
+                        require("../../assets/img/theme/logo1.jpeg")
                           .default
                       }
                     />
                   </span>
                   <Media className="ml-2 d-none d-lg-block">
                     <span className="mb-0 text-sm font-weight-bold">
-                      Jessica Jones
+                      Chitkara University
                     </span>
                   </Media>
                 </Media>

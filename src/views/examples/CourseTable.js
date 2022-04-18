@@ -76,7 +76,7 @@ const CourseTable = () => {
                       &&
                       departments.map(department => {
                         return (
-                          <option value={department._id} key={department._id}>{department.deptFullName}</option>
+                          <option value={department._id} key={department.deptCode}>{department.deptFullName}</option>
                         )
                       })
                     }

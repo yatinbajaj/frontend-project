@@ -10,7 +10,7 @@ const UserHeader = ({userName}) => {
           minHeight: "600px",
           backgroundImage:
             "url(" +
-            require("../../assets/img/theme/profile-cover.jpg").default +
+            require("../../assets/img/brand/argon-react.png").default +
             ")",
           backgroundSize: "cover",
           backgroundPosition: "center top",
