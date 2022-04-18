@@ -37,8 +37,13 @@ const DepartmentTable = () => {
         <Row>
           <div className="col">
             <Card className="shadow">
-              <CardHeader className="border-0">
+              <CardHeader className="d-flex align-items-center justify-content-between border-0">
                 <h3 className="mb-0">Department Table</h3>
+                <select name="" id="" className="w-50">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
               </CardHeader>
               <Table className="align-items-center table-dark table-flush"
                 responsive>

@@ -39,7 +39,6 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log("hello")
     setFormErrors(validate(formValues))
     setIsSubmit(true)
   }
