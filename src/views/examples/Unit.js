@@ -25,14 +25,15 @@ const Courses = () => {
     const [isSubmit, setIsSubmit] = useState(false)
     const [subjects, setSubjects] = useState([]);
 
+    
+    const ctx = useContext(FetchContext);
+    const authAxios = ctx.authAxios;
+    const history = useHistory();
+    
     const handleChange = (e) => {
         const { name, value } = e.target
         setFormValues({ ...formValues, [name]: value })
     }
-
-    const ctx = useContext(FetchContext);
-    const authAxios = ctx.authAxios;
-    const history = useHistory();
     
     const handleSubmit = (e) => {
         e.preventDefault()
